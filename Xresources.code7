@@ -12,3 +12,6 @@ XTerm*utf8Fonts.font:        -bwoolley-code7-medium-r-*
 XTerm*utf8Fonts.boldFont:    -bwoolley-code7-bold-r-*
 
 XTerm*internalBorder: 0
+
+XTerm*termName: xterm-256color
+UXTerm*termName: xterm-256color

@@ -1,10 +1,13 @@
 # syntax=docker/dockerfile:experimental
 
 ARG font="code7"
-FROM ubuntu AS fontforge
+FROM ubuntu:24.04 AS fontforge
 ARG font="code7"
 ENV font=${font}
-RUN yes | unminimize
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -yq --force-yes python3-pip python3-fontforge
-RUN yes | pip3 install bdf2ttf
+RUN apt-get update \
+	&& DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+		python3-fontforge \
+		python3-pip \
+	&& rm -rf /var/lib/apt/lists/*
+RUN pip3 install --break-system-packages --no-cache-dir bdf2ttf
 

@@ -1,0 +1,17 @@
+XTerm*colorBD: gray70
+XTerm*colorBDMode: false
+XTerm*reverseVideo: false
+
+XTerm*boldMode: false
+XTerm*alwaysBoldMode: false
+XTerm*allowBoldFonts: true
+
+XTerm*font:        -bwoolley-code7-medium-r-normal--14-140-75-75-m-120-iso10646-1
+XTerm*boldFont:    -bwoolley-code7-bold-r-normal--14-140-75-75-m-120-iso10646-1
+XTerm*utf8Fonts.font:        -bwoolley-code7-medium-r-normal--14-140-75-75-m-120-iso10646-1
+XTerm*utf8Fonts.boldFont:    -bwoolley-code7-bold-r-normal--14-140-75-75-m-120-iso10646-1
+
+XTerm*internalBorder: 0
+
+XTerm*termName: xterm-256color
+UXTerm*termName: xterm-256color
