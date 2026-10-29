@@ -1,17 +1,17 @@
-XTerm*colorBD: gray70
-XTerm*colorBDMode: false
-XTerm*reverseVideo: false
+*VT100.colorBD: gray70
+*VT100.colorBDMode: false
+*VT100.reverseVideo: false
 
-XTerm*boldMode: false
-XTerm*alwaysBoldMode: false
-XTerm*allowBoldFonts: true
+*VT100.boldMode: false
+*VT100.alwaysBoldMode: false
+*VT100.allowBoldFonts: true
 
-XTerm*font:        -bwoolley-code7-medium-r-*
-XTerm*boldFont:    -bwoolley-code7-bold-r-*
-XTerm*utf8Fonts.font:        -bwoolley-code7-medium-r-*
-XTerm*utf8Fonts.boldFont:    -bwoolley-code7-bold-r-*
+*VT100.font:        -bwoolley-code7-medium-r-*
+*VT100.boldFont:    -bwoolley-code7-bold-r-*
+*VT100.utf8Fonts.font:        -bwoolley-code7-medium-r-*
+*VT100.utf8Fonts.boldFont:    -bwoolley-code7-bold-r-*
 
-XTerm*internalBorder: 0
+*VT100.internalBorder: 0
 
 XTerm*termName: xterm-256color
 UXTerm*termName: xterm-256color
