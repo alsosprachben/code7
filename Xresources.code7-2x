@@ -11,6 +11,12 @@
 *VT100.utf8Fonts.font:        -bwoolley-code7-medium-r-normal--14-140-75-75-m-120-iso10646-1
 *VT100.utf8Fonts.boldFont:    -bwoolley-code7-bold-r-normal--14-140-75-75-m-120-iso10646-1
 
+! code7w: 12x7 glyphs for double-width characters (emoji), scaled 2x like the font above
+*VT100.wideFont:              -bwoolley-code7-medium-r-normal--14-140-75-75-c-240-iso10646-1
+*VT100.wideBoldFont:          -bwoolley-code7-medium-r-normal--14-140-75-75-c-240-iso10646-1
+*VT100.utf8Fonts.wideFont:    -bwoolley-code7-medium-r-normal--14-140-75-75-c-240-iso10646-1
+*VT100.utf8Fonts.wideBoldFont: -bwoolley-code7-medium-r-normal--14-140-75-75-c-240-iso10646-1
+
 *VT100.internalBorder: 0
 
 XTerm*termName: xterm-256color

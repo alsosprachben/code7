@@ -1,6 +1,6 @@
 .PHONY: all
 
-all: code7.ttf code7sc.ttf code7it.ttf
+all: code7.ttf code7sc.ttf code7it.ttf code7w.bdf
 
 %.ttf: %.bdf fontforge
 	docker image rm ttf || true
@@ -10,6 +10,7 @@ all: code7.ttf code7sc.ttf code7it.ttf
 code7_glyphs   := $(wildcard ./fnt/code7/6x7/*)
 code7sc_glyphs := $(wildcard ./fnt/code7sc//6x7/*)
 code7it_glyphs := $(wildcard ./fnt/code7it//6x7/*)
+code7w_glyphs  := $(wildcard ./fnt/code7w/12x7/*)
 
 code7.bdf: ${code7_glyphs}
 	./fnt/src/2bdf.sh "${<D}" > "${@}"
@@ -18,6 +19,10 @@ code7sc.bdf: ${code7sc_glyphs}
 	./fnt/src/2bdf.sh "${<D}" > "${@}"
 
 code7it.bdf: ${code7it_glyphs}
+	./fnt/src/2bdf.sh "${<D}" > "${@}"
+
+# double-width glyphs for xterm's wideFont; bitmap only, no TTF
+code7w.bdf: ${code7w_glyphs}
 	./fnt/src/2bdf.sh "${<D}" > "${@}"
 
 fontforge:
