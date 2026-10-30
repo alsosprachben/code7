@@ -1,6 +1,13 @@
-.PHONY: all
+.PHONY: all check
 
 all: code7.ttf code7sc.ttf code7it.ttf code7w.ttf
+
+# every character must differ from every other by at least one pixel
+check:
+	./tools/dups.py ./fnt/code7/6x7
+	./tools/dups.py ./fnt/code7sc/6x7
+	./tools/dups.py ./fnt/code7it/6x7
+	./tools/dups.py ./fnt/code7w/12x7
 
 %.ttf: %.bdf fontforge Dockerfile.ttf ttffix.py
 	docker image rm ttf || true

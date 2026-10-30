@@ -1,0 +1,6 @@
+# fontconfig cache ID, written by fc-cache in setup.sh
+.uuid
+# sentinel for the fontforge Docker image (see Makefile)
+fontforge
+# xterm log files (-l / logging)
+Xterm.log.*
