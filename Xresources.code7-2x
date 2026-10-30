@@ -6,6 +6,8 @@
 *VT100.alwaysBoldMode: false
 *VT100.allowBoldFonts: true
 
+! Bitmap fonts; turns off the TrueType mode set by Xresources.code7-ttf
+*VT100.renderFont: false
 *VT100.font:        -bwoolley-code7-medium-r-normal--14-140-75-75-m-120-iso10646-1
 *VT100.boldFont:    -bwoolley-code7-bold-r-normal--14-140-75-75-m-120-iso10646-1
 *VT100.utf8Fonts.font:        -bwoolley-code7-medium-r-normal--14-140-75-75-m-120-iso10646-1

@@ -1,0 +1,7 @@
+! TrueType (Xft) rendering of code7 at 2x, merged on top of Xresources.code7-2x by setup-ttf.sh.
+! Unlike the bitmap fonts this reaches characters above U+FFFF.
+! Bold picks code7sc (style bold), italic picks code7it (slant italic).
+*VT100.renderFont: true
+*VT100.faceName: code7:pixelsize=14
+! code7w: 12x7 glyphs for double-width characters (emoji)
+*VT100.faceNameDoublesize: code7w:pixelsize=14

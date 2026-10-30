@@ -9,3 +9,4 @@ WORKDIR /code7
 RUN mkdir -p ttf
 RUN awk '/^POINT_SIZE / { print "POINT_SIZE " int(($2 + 5) / 10); next } { print }' ${font}.bdf > /tmp/${font}.bdf
 RUN bdf2ttf /tmp/${font}.bdf --out ttf/${font}.ttf
+RUN python3 ttffix.py ${font} ttf/${font}.ttf

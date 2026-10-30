@@ -7,6 +7,8 @@
 *VT100.allowBoldFonts: true
 
 ! Spell out the spacing and width: -medium-r-* alone also matches code7w, the double-width font.
+! Bitmap fonts; turns off the TrueType mode set by Xresources.code7-ttf
+*VT100.renderFont: false
 *VT100.font:        -bwoolley-code7-medium-r-normal--7-70-75-75-m-60-iso10646-1
 *VT100.boldFont:    -bwoolley-code7-bold-r-normal--7-70-75-75-m-60-iso10646-1
 *VT100.utf8Fonts.font:        -bwoolley-code7-medium-r-normal--7-70-75-75-m-60-iso10646-1
