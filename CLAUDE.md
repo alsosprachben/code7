@@ -27,7 +27,7 @@ The build pipeline per font:
 3. `Dockerfile.ttf` runs `bdf2ttf`, then `ttffix.py`, which marks `code7it.ttf` italic and gives `code7w.ttf` its own family (bdf2ttf would register both as a second "code7 medium")
 4. `Dockerfile` exports the TTF back to the host via BuildKit `--output type=local`
 
-For `code7w.ttf`, `Dockerfile.ttf` then runs `cbdt.py`, which adds a 14px colour bitmap strike (CBDT/CBLC tables). Glyphs in `fnt/code7w-color/12x7` are drawn in colour; every other code7w glyph goes into the strike in the foreground colour (solarized base0). This is required: once Xft uses a font's colour strike it can't load that font's outlines, and xterm then rejects the font for failing its Latin-1 check. So in TrueType mode, wide glyphs don't follow the terminal's text colour. The BDF and bitmap mode stay monochrome.
+For `code7w.ttf`, `Dockerfile.ttf` then runs `cbdt.py`, which adds a 14px colour bitmap strike (CBDT/CBLC tables). Glyphs in `fnt/code7w-color/12x7` are drawn in colour; every other code7w glyph goes into the strike in a neutral grey. This is required: once Xft uses a font's colour strike it can't load that font's outlines, and xterm then rejects the font for failing its Latin-1 check. So in TrueType mode, wide glyphs don't follow the terminal's text colour. The BDF and bitmap mode stay monochrome.
 
 `code7w.bdf` also gets pixel-doubled ASCII and Latin-1 from `latin2x.py` at build time: xterm rejects a `faceNameDoublesize` font without ISO-8859-1 glyphs. They are generated, not stored in `fnt/`.
 
@@ -40,7 +40,7 @@ Each glyph is a text file of H rows of W cells, `x` for ink and `.` for blank. I
 Conventions:
 - In 6x7, column 6 is normally blank (the gap between characters). Capitals use rows 1-6, lowercase bodies rows 2-6, with accents above and descenders in row 7.
 - In 12x7 (`code7w`), draw in columns 1-11 and leave column 12 blank. Pictograms are about 7-9 wide and centred, so they look square.
-- `fnt/code7w-color/12x7` holds optional colour versions of code7w glyphs, with the same file names. Their cells are palette letters instead of `x`: `r o y g c b v m` for the solarized accents, `w` for cream, `k` for grey, and `x` for the foreground. The palette is defined in `cbdt.py`. A colour glyph must also exist in `fnt/code7w/12x7` as the monochrome fallback.
+- `fnt/code7w-color/12x7` holds optional colour versions of code7w glyphs, with the same file names. Their cells are palette letters instead of `x`: `r o y g b v n` for red, orange, yellow, green, blue, purple and brown, `w` white, `k` grey, `d` dark, and `x` for a neutral grey. The palette is defined in `cbdt.py`. A colour glyph must also exist in `fnt/code7w/12x7` as the monochrome fallback.
 - Symbols are the same in all three 6x7 variants. Letters differ: code7sc lowercase is small caps, and code7it has hand-slanted capitals.
 - **Every character must differ from every other by at least one pixel**, within each font. Prefer an added mark over reshaping a letter. `tools/dups.py` lists the only agreed exceptions: the blanks (space, no-break space, braille blank) and three full-width combining marks.
 - Greek and Cyrillic letters that would match an existing glyph carry a 1-pixel script mark in row 7: Cyrillic at the bottom right, Greek at the bottom left.

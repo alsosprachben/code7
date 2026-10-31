@@ -10,7 +10,7 @@ check:
 	./tools/dups.py ./fnt/code7w/12x7
 	./tools/dups.py ./fnt/code7w-color/12x7
 
-%.ttf: %.bdf fontforge Dockerfile.ttf ttffix.py cbdt.py
+%.ttf: %.bdf fontforge Dockerfile.ttf ttffix.py
 	docker image rm ttf || true
 	DOCKER_BUILDKIT=1 docker build -f Dockerfile.ttf --build-arg font=${*} --target ttf -t ttf .
 	DOCKER_BUILDKIT=1 docker build -f Dockerfile     --build-arg font=${*} --target export --output type=local,dest=. .
@@ -22,7 +22,7 @@ code7w_glyphs  := $(wildcard ./fnt/code7w/12x7/*)
 code7w_color   := $(wildcard ./fnt/code7w-color/12x7/*)
 
 # colour versions of code7w glyphs, added to the TTF only (see cbdt.py)
-code7w.ttf: ${code7w_color}
+code7w.ttf: cbdt.py ${code7w_color}
 
 code7.bdf: ${code7_glyphs}
 	./fnt/src/2bdf.sh "${<D}" > "${@}"

@@ -11,18 +11,20 @@ from fontTools.ttLib import TTFont, newTable
 from fontTools.ttLib.tables import E_B_L_C_ as eblc, C_B_D_T_ as cbdt
 from fontTools.ttLib.tables.BitmapGlyphMetrics import SmallGlyphMetrics
 
-PALETTE = {  # solarized, to suit Xresources.dark
-	'r': (0xdc, 0x32, 0x2f),  # red
-	'o': (0xcb, 0x4b, 0x16),  # orange
-	'y': (0xb5, 0x89, 0x00),  # yellow
-	'g': (0x85, 0x99, 0x00),  # green
-	'c': (0x2a, 0xa1, 0x98),  # cyan
-	'b': (0x26, 0x8b, 0xd2),  # blue
-	'v': (0x6c, 0x71, 0xc4),  # violet
-	'm': (0xd3, 0x36, 0x82),  # magenta
-	'w': (0xee, 0xe8, 0xd5),  # base2, cream
-	'k': (0x58, 0x6e, 0x75),  # base01, grey
-	'x': (0x83, 0x94, 0x96),  # base0, the normal foreground: monochrome glyphs
+# Explicit emoji colours, independent of the terminal theme (colour glyphs ignore it anyway),
+# chosen to read on dark and light backgrounds alike.
+PALETTE = {
+	'r': (0xdd, 0x2e, 0x44),  # red
+	'o': (0xf4, 0x90, 0x0c),  # orange
+	'y': (0xfd, 0xcb, 0x58),  # yellow
+	'g': (0x78, 0xb1, 0x59),  # green
+	'b': (0x55, 0xac, 0xee),  # blue
+	'v': (0xaa, 0x8e, 0xd6),  # purple
+	'n': (0xc1, 0x69, 0x4f),  # brown
+	'w': (0xe6, 0xe7, 0xe8),  # white
+	'k': (0x66, 0x75, 0x7f),  # grey
+	'd': (0x31, 0x37, 0x3d),  # dark
+	'x': (0x93, 0x93, 0x93),  # neutral grey: glyphs with no colour version
 }
 SCALE = 2           # screen pixels per design pixel at 14px
 ASCENT, DESCENT = 6, 1  # design rows above and below the baseline
