@@ -55,7 +55,7 @@ Tools (run from anywhere):
 
 - `setup.sh` — adds this directory to the X font path (`xset fp+`), runs `fc-cache`, and merges `Xresources.code7` (bitmap fonts at 1x) plus `Xresources.dark` (solarized dark colours).
 - `setup-double.sh` — the same with `Xresources.code7-2x`: the bitmap fonts at 14px, scaled 2x by the X server.
-- `setup-ttf.sh` — copies the four TTFs to `~/.local/share/fonts` and merges `Xresources.code7-2x` then `Xresources.code7-ttf`, which turns on `renderFont` (Xft) with `faceName: code7:pixelsize=14` and `faceNameDoublesize: code7w:pixelsize=14`. Only this mode reaches characters above U+FFFF: X11 core (bitmap) fonts are limited to the BMP.
+- `setup-ttf.sh` — copies the four TTFs to `~/.local/share/fonts`, installs `fontconfig-code7.conf` as `~/.config/fontconfig/conf.d/50-code7.conf` (code7w becomes the first fallback for code7, for terminals such as gnome-terminal that find missing glyphs through fontconfig), and merges `Xresources.code7-2x` then `Xresources.code7-ttf`, which turns on `renderFont` (Xft) with `faceName: code7:pixelsize=14` and `faceNameDoublesize: code7w:pixelsize=14`. Only this mode reaches characters above U+FFFF: X11 core (bitmap) fonts are limited to the BMP.
 - `term.sh` — sources `setup.sh` then execs `xterm`.
 
 The XLFD names in `fonts.dir` are what the Xresources files reference. They are spelled out in full (e.g. `-bwoolley-code7-medium-r-normal--7-70-75-75-m-60-iso10646-1`), because a wildcard such as `-bwoolley-code7-medium-r-*` also matches code7w (spacing `c`, width 120). At 2x the names become `--14-140-...-m-120` and `--14-140-...-c-240`. If you rename a BDF or change its FOUNDRY/FAMILY, update `fonts.dir` to match, or xterm will fail to find the font.

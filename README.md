@@ -15,9 +15,16 @@ Run `term.sh` to run `setup.sh` and exec `xterm`.
 
 Run `setup-ttf.sh` to use the TrueType fonts instead, at twice the size:
  1. Copy code7.ttf, code7sc.ttf, code7it.ttf and code7w.ttf to ~/.local/share/fonts.
- 2. Merge Xresources.code7-2x, then Xresources.code7-ttf, which turns on
+ 2. Install fontconfig-code7.conf as ~/.config/fontconfig/conf.d/50-code7.conf,
+    which makes code7w the first fallback font for code7.
+ 3. Merge Xresources.code7-2x, then Xresources.code7-ttf, which turns on
     xterm's renderFont. Unlike the bitmap fonts, this reaches characters above
     U+FFFF.
+
+Other terminals, such as gnome-terminal, take a single font and find missing
+characters through fontconfig. With the fontconfig rule installed, choose
+"code7" at 10.5 point (14 pixels at 96 DPI) and wide characters come from
+code7w; its colour bitmaps are drawn at exactly that size.
 
 code7w is a 12x7 font for double-width characters such as emoji. xterm uses
 it as wideFont (bitmap) or faceNameDoublesize (TrueType).
