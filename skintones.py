@@ -27,8 +27,11 @@ n = 0
 def tones(rows, *seq):
 	"""Save rows once per tone, as seq with the modifier after its first codepoint."""
 	global n
+	rest = list(seq[1:])
+	if rest[:1] == ['FE0F']:  # the modifier replaces the emoji selector: ✌️ is 270C-FE0F, ✌🏽 270C-1F3FD
+		rest = rest[1:]
 	for mod, tone in TONES.items():
-		name = '-'.join([seq[0], '%04X' % mod] + list(seq[1:]))
+		name = '-'.join([seq[0], '%04X' % mod] + rest)
 		open(os.path.join(outdir, name), 'w').write('\n'.join(r.replace('y', tone) for r in rows) + '\n')
 		n += 1
 
