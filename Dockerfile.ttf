@@ -10,4 +10,5 @@ RUN mkdir -p ttf
 RUN awk '/^POINT_SIZE / { print "POINT_SIZE " int(($2 + 5) / 10); next } { print }' ${font}.bdf > /tmp/${font}.bdf
 RUN bdf2ttf /tmp/${font}.bdf --out ttf/${font}.ttf
 RUN python3 ttffix.py ${font} ttf/${font}.ttf
-RUN if [ "${font}" = code7w ]; then python3 cbdt.py ttf/${font}.ttf fnt/code7w-color/12x7 ${font}.bdf; fi
+RUN if [ "${font}" = code7w ]; then python3 flags.py ttf/${font}.ttf fnt/code7w-flags/12x7; fi
+RUN if [ "${font}" = code7w ]; then python3 cbdt.py ttf/${font}.ttf fnt/code7w-color/12x7 ${font}.bdf fnt/code7w-flags/12x7; fi

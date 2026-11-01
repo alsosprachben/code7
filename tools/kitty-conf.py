@@ -2,13 +2,13 @@
 # kitty-conf.py [GLYPHDIR]: print a kitty config for code7, routing every character that
 # has a code7w glyph to code7w via symbol_map. kitty picks fonts per character itself
 # rather than by xterm's wide-font rule, so without this, wide characters that also have
-# a narrow code7 glyph (✅ ⭐ ...) would be drawn small. The regional indicators stay with
-# code7: terminals give them one cell.
+# a narrow code7 glyph (✅ ⭐ ...) would be drawn small. The regional indicators go to
+# code7w too, where flags.py joins pairs of them into flags.
 import os, sys
 import glyphlib
 
 d = sys.argv[1] if len(sys.argv) > 1 else os.path.join(glyphlib.FNT, 'code7w', '12x7')
-cps = sorted(c for c in map(glyphlib.codepoint, glyphlib.files(d)) if c and c > 0xFF and not 0x1F1E6 <= c <= 0x1F1FF)
+cps = sorted(c for c in map(glyphlib.codepoint, glyphlib.files(d)) if c and c > 0xFF)
 ranges = []
 for c in cps:
 	if ranges and c == ranges[-1][1] + 1:

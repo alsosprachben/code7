@@ -29,6 +29,8 @@ The build pipeline per font:
 
 For `code7w.ttf`, `Dockerfile.ttf` then runs `cbdt.py`, which adds a 14px colour bitmap strike (CBDT/CBLC tables). Glyphs in `fnt/code7w-color/12x7` are drawn in colour; every other code7w glyph goes into the strike in a neutral grey. This is required: once Xft uses a font's colour strike it can't load that font's outlines, and xterm then rejects the font for failing its Latin-1 check. So in TrueType mode, wide glyphs don't follow the terminal's text colour. The BDF and bitmap mode stay monochrome.
 
+Before that, `flags.py` adds country flags to `code7w.ttf` as ligatures, for terminals that shape text (kitty, WezTerm): each file in `fnt/code7w-flags/12x7` is named after a country code (`US`, `JP` ...) and drawn in the colour palette; `flags.py` adds a two-cell glyph `flag_XX` and a GSUB ligature from the two regional indicator letters to it, and narrows the letter keys to one cell, and `cbdt.py` gives the flag its colour bitmap. xterm and gnome-terminal don't shape, so they keep showing the letter keys from code7.
+
 `code7w.bdf` also gets pixel-doubled ASCII and Latin-1 from `latin2x.py` at build time: xterm rejects a `faceNameDoublesize` font without ISO-8859-1 glyphs. They are generated, not stored in `fnt/`.
 
 The `fontforge` Make target writes a sentinel file of the same name. The image rebuilds when `Dockerfile.fontforge` changes; delete the sentinel to force a rebuild otherwise. A rebuilt image restamps the build date in every TTF; restore the unchanged ones with `git checkout` before committing. Built BDFs and TTFs are committed.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# cbdt.py TTF COLORDIR BDF: give code7w.ttf a 14px colour bitmap strike (CBDT/CBLC tables),
+# cbdt.py TTF COLORDIR BDF [FLAGDIR]: give code7w.ttf a 14px colour bitmap strike (CBDT/CBLC tables),
 # for xterm's TrueType mode at faceNameDoublesize code7w:pixelsize=14.
 #
 # Glyphs in COLORDIR (12x7, palette letters below, '.' transparent) are drawn in colour.
@@ -83,6 +83,14 @@ cmap = f.getBestCmap()
 glyphs = {cmap[cp]: rows for cp, rows in bdf_glyphs(bdf).items() if cp in cmap}
 for n in os.listdir(colordir):
 	glyphs[cmap[int(n[2:], 16)]] = open(os.path.join(colordir, n)).read().split()
+if len(sys.argv) > 4:  # flag ligature glyphs added by flags.py, which have no codepoint
+	for n in os.listdir(sys.argv[4]):
+		glyphs['flag_' + n] = open(os.path.join(sys.argv[4], n)).read().split()
+px = f['head'].unitsPerEm // 7
+for name, rows in glyphs.items():  # crop bitmaps to the glyph's advance (flags.py narrows the letter keys)
+	adv = f['hmtx'][name][0] // px
+	if adv < len(rows[0]):
+		glyphs[name] = [r[:adv] for r in rows]
 names = sorted(glyphs, key=f.getGlyphID)
 
 data, subtables = {}, []
