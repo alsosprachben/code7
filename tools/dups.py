@@ -4,7 +4,8 @@
 # so drafts can be checked against a font: dups.py fnt/code7/6x7 drafts/code7).
 # Every character must differ from every other by at least one pixel; the agreed
 # exceptions below are not reported. A glyph with no pixels set is reported unless it is one of
-# the BLANK characters (an empty 🛜 once slipped through). Exits 1 if anything is reported.
+# the BLANK characters (an empty 🛜 once slipped through). Two files for one character (Tau and U+03A4,
+# U+27A1 and U+027A1) are reported too: the build would put both in the font. Exits 1 if anything is reported.
 import collections, sys
 import glyphlib
 
@@ -20,8 +21,8 @@ EXEMPT = [
 	{0x2847, 0x1D104},  # ⡇ 𝄄
 	{0x2806, 0x1D108},  # ⠆ 𝄈
 	{0x30C, 0x1D127},  # ̌ 𝄧
-	{0x2722, 0x1D144},  # ✢ 𝅄
-	{0x25E6, 0x1D146},  # ◦ 𝅆
+	{0x2722, 0x1D144, 0x2B29},  # ✢ 𝅄 ⬩
+	{0x25E6, 0x1D146, 0x2B1E},  # ◦ 𝅆 ⬞
 	{0x25C2, 0x1D14B},  # ◂ 𝅋
 	{0x25B8, 0x1D14D},  # ▸ 𝅍
 	{0x25FB, 0x1D15A},  # ◻ 𝅚
@@ -41,6 +42,14 @@ EXEMPT = [
 	{0x253B, 0x1CE40}, {0x22C5, 0x1CE4D}, {0x1D19C, 0x1CE58}, {0xAD, 0x1CE5C},
 	{0x26AD, 0x1CC88},  # ⚭ 𜲈: the marriage symbol is two rings
 	{0x1CE52, 0x1CE92}, {0x1CE70, 0x1CE9E},  # separated sextant cells that coincide with sixteenth blocks
+	{0x4DD3, 0x1CE03},  # ䷓ 𜸃
+	# glyphs drawn their natural way although they match an unrelated or same-meaning glyph (agreed 2026-11-01)
+	{0x27A1, 0x2B95},  # ➡ ⮕
+	{0x27F5, 0x1F800}, {0x27F6, 0x1F802}, {0x27A7, 0x1F81A}, {0x279C, 0x1F82E}, {0x2799, 0x1F846},  # same-direction arrows
+	{0x1F590, 0x1F591},  # 🖐 🖑: the hand is symmetric, so mirroring it changes nothing
+	{0x2B1B, 0x4DC0},  # ⬛ ䷀: six solid lines with no room for gaps
+	{0xE0B1, 0x1FBDF}, {0xE0B3, 0x1FBDD},  # Powerline thin arrows, legacy computing diagonals
+	{0x2371, 0x2661},  # ⍱ ♡
 ]
 BLANK = {0x20, 0xa0, 0x2800}  # space, no-break space, braille blank
 
@@ -57,6 +66,13 @@ bad = 0
 for group in by.values():
 	if len(group) > 1 and {glyphlib.codepoint(n) for n in group} not in EXEMPT:
 		print(' = '.join(sorted(group, key=glyphlib.codepoint)))
+		bad += 1
+files = collections.defaultdict(list)
+for name in glyphs:
+	files[glyphlib.codepoint(name)].append(name)
+for cp, names in files.items():
+	if len(names) > 1:
+		print('two files for U+%04X: %s' % (cp, ' '.join(names)))
 		bad += 1
 for name, bitmap in glyphs.items():
 	if not any(c != '.' for r in bitmap for c in r) and glyphlib.codepoint(name) not in BLANK:
