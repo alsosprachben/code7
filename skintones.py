@@ -56,7 +56,7 @@ for name in sorted(os.listdir(outdir)):
 	rows = open(os.path.join(outdir, name)).read().split()
 	if any('z' in r for r in rows):
 		pairs(rows, *seq)
-	elif sum(int(c, 16) in BASES for c in seq) == 1 and int(seq[0], 16) in BASES and any('y' in r for r in rows):
+	elif sum(int(c, 16) in BASES for c in seq) == 1 and int(seq[0], 16) in BASES:
 		tones(rows, *seq)
 for base in BASES:
 	path = os.path.join(colordir, 'U+%05X' % base)

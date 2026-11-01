@@ -23,7 +23,7 @@ code7w_color   := $(wildcard ./fnt/code7w-color/12x7/*)
 code7w_flags   := $(wildcard ./fnt/code7w-flags/12x7/*)
 
 # colour versions of code7w glyphs, added to the TTF only (see cbdt.py)
-code7w.ttf: cbdt.py flags.py skintones.py ${code7w_color} ${code7w_flags}
+code7w.ttf: cbdt.py flags.py genders.py skintones.py ${code7w_color} ${code7w_flags}
 
 code7.bdf: ${code7_glyphs}
 	./fnt/src/2bdf.sh "${<D}" > "${@}"
