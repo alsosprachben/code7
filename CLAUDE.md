@@ -18,7 +18,7 @@ Each is built as a BDF (X11 bitmap) and a TTF. Source glyphs live in the `fnt` g
 git submodule update --init    # required — fnt/ is empty without this
 make all                       # builds the four TTFs (and their BDFs)
 make code7sc.ttf               # build a single font
-make check                     # duplicate-bitmap check on all four fonts
+make check                     # emoji coverage, then duplicate and blank bitmaps in all four fonts
 ```
 
 The build pipeline per font:
@@ -50,10 +50,11 @@ Conventions:
 - Symbols are the same in all three 6x7 variants. Letters differ: code7sc lowercase is small caps, and code7it has hand-slanted capitals.
 - **Every character must differ from every other by at least one pixel**, within each font. Prefer an added mark over reshaping a letter. `tools/dups.py` lists the only agreed exceptions: the blanks (space, no-break space, braille blank) and three full-width combining marks.
 - Greek and Cyrillic letters that would match an existing glyph carry a 1-pixel script mark in row 7: Cyrillic at the bottom right, Greek at the bottom left.
-- Any character that is East-Asian-wide (`unicodedata.east_asian_width` W or F) and is in code7 must also have a 12x7 version in `fnt/code7w/12x7`. Python's `unicodedata` lags Unicode (15.0 here) and calls newer emoji narrow, so also check new emoji against the `Basic_Emoji` entries in Unicode's `emoji-sequences.txt` (https://unicode.org/Public/emoji/latest/); every one of those that isn't a text-style character with FE0F needs a code7w glyph. xterm draws a wide character missing from the wide font as blank (bitmap) or a box (TrueType).
+- Any character that is East-Asian-wide (`unicodedata.east_asian_width` W or F) and is in code7 must also have a 12x7 version in `fnt/code7w/12x7`. Python's `unicodedata` lags Unicode (15.0 here) and calls newer emoji narrow, so the emoji lists are the reference: `make check` runs `tools/coverage.py`, which checks every emoji and sequence in `tools/unicode` against the sources. When Unicode publishes a new emoji version, replace the two files there from https://unicode.org/Public/emoji/latest/ and draw whatever it reports. xterm draws a wide character missing from the wide font as blank (bitmap) or a box (TrueType).
 
 Tools (run from anywhere):
-- `tools/dups.py DIR...` reports identical bitmaps. A later dir overrides an earlier one, so a draft can be checked against a font.
+- `tools/dups.py DIR...` reports identical bitmaps, and glyphs with no ink other than the agreed blanks. A later dir overrides an earlier one, so a draft can be checked against a font.
+- `tools/coverage.py` checks the sources against Unicode's emoji lists in `tools/unicode` (emoji, text-style emoji with their 6x7 glyph and colour form, and every sequence's ligature source).
 - `tools/show.py DIR HEX...` prints the given codepoints.
 - `tools/sheet.py DIR` prints a whole glyph dir with character headers.
 - `tools/kitty-conf.py` prints the kitty config (`make all` writes it to `kitty-code7.conf`).

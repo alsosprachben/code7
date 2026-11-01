@@ -2,8 +2,10 @@
 
 all: code7.ttf code7sc.ttf code7it.ttf code7w.ttf kitty-code7.conf
 
-# every character must differ from every other by at least one pixel
+# every character must differ from every other by at least one pixel, and every emoji in
+# Unicode's lists (tools/unicode) must have a glyph or ligature source
 check:
+	./tools/coverage.py
 	./tools/dups.py ./fnt/code7/6x7
 	./tools/dups.py ./fnt/code7sc/6x7
 	./tools/dups.py ./fnt/code7it/6x7
