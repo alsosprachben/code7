@@ -26,6 +26,9 @@ for cp in list(range(0x1F1E6, 0x1F200)) + [0x1F3F3]:
 def glyph_for(cp):
 	"""the glyph for cp, adding an empty zero-width one if the font has none"""
 	if cp not in cmap:
+		if not (cp in (0x200D, 0x20E3) or 0xFE00 <= cp <= 0xFE0F or 0xE0000 <= cp <= 0xE007F or '%04X-FE0F' % cp in sources):
+			# a terminal that falls back to code7w for a plain cp would draw this empty glyph
+			print('flags.py: warning: U+%04X has no glyph; add %04X-FE0F to %s' % (cp, cp, flagdir), file=sys.stderr)
 		name = 'u%04X' % cp
 		glyf[name] = TTGlyphPen(None).glyph()
 		hmtx[name] = (0, 0)
@@ -34,6 +37,7 @@ def glyph_for(cp):
 				t.cmap[cp] = name
 		cmap[cp] = name
 	return cmap[cp]
+sources = set(os.listdir(flagdir))
 for code in sorted(os.listdir(flagdir)):
 	rows = open(os.path.join(flagdir, code)).read().split()
 	pen = TTGlyphPen(None)
