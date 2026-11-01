@@ -12,7 +12,9 @@ EXEMPT = [
 	{0x20, 0xa0, 0x2800},   # space, no-break space, braille blank: all blank
 	{0x305, 0x23ba},        # combining overline, scan line 1: full width so it joins
 	{0x332, 0x23bd},        # combining low line, scan line 9
-	{0x336, 0x2500},        # combining long stroke, box drawings light horizontal
+	{0x336, 0x2500, 0x23AF},  # combining long stroke, box drawings light horizontal, horizontal line extension
+	# bracket and line extension pieces: they sit in column 2 to join the pieces above and below
+	{0x2502, 0x239C, 0x239F, 0x23A2, 0x23A5, 0x23AA, 0x23AE, 0x23D0},
 ]
 BLANK = {0x20, 0xa0, 0x2800}  # space, no-break space, braille blank
 
