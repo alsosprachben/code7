@@ -85,7 +85,7 @@ for n in os.listdir(colordir):
 	glyphs[cmap[int(n[2:], 16)]] = open(os.path.join(colordir, n)).read().split()
 if len(sys.argv) > 4:  # flag ligature glyphs added by flags.py, which have no codepoint
 	for n in os.listdir(sys.argv[4]):
-		glyphs['flag_' + n] = open(os.path.join(sys.argv[4], n)).read().split()
+		glyphs['flag_' + n.replace('-', '_')] = open(os.path.join(sys.argv[4], n)).read().split()
 px = f['head'].unitsPerEm // 7
 for name, rows in glyphs.items():  # crop bitmaps to the glyph's advance (flags.py narrows the letter keys)
 	adv = f['hmtx'][name][0] // px
