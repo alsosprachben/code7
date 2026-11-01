@@ -4,7 +4,8 @@
 # and each modifier U+1F3FB-1F3FF, the base's drawing is copied with its skin (palette 'y')
 # recoloured to the modifier's tone and saved as BASE-MODIFIER (e.g. 1F44D-1F3FD), so a
 # shaping terminal draws 👍🏽 in that tone. Sequences already in OUTDIR that start with a base and
-# have skin are toned the same way: 1F469-200D-1F4BB (👩‍💻) gives 1F469-1F3FD-200D-1F4BB (👩🏽‍💻).
+# have skin are toned the same way: 1F469-200D-1F4BB (👩‍💻) gives 1F469-1F3FD-200D-1F4BB (👩🏽‍💻), and
+# a two-person sequence drawn with a second skin 'z' gets all 25 pairs of tones.
 # Generated at build time, not stored in fnt/.
 import os, sys
 
@@ -32,11 +33,27 @@ def tones(rows, *seq):
 		n += 1
 
 
-# sequences already in OUTDIR that start with a base (👩‍💻 is 1F469-200D-1F4BB) get toned too (👩🏽‍💻)
+def pairs(rows, *seq):
+	"""Save rows once per pair of tones: 'y' (the first person) takes the modifier after the first
+	codepoint, and 'z' (the second) the one after the last, as in 👩🏻‍❤️‍👨🏿."""
+	global n
+	for mod1, tone1 in TONES.items():
+		for mod2, tone2 in TONES.items():
+			name = '-'.join([seq[0], '%04X' % mod1] + list(seq[1:]) + ['%04X' % mod2])
+			open(os.path.join(outdir, name), 'w').write('\n'.join(r.replace('y', tone1).replace('z', tone2) for r in rows) + '\n')
+			n += 1
+
+
+# sequences already in OUTDIR get toned too: one person (👩‍💻, 1F469-200D-1F4BB, gives 👩🏽‍💻), or two
+# drawn with skins 'y' and 'z' (👩‍❤️‍👨). Families, with several people and one skin, are left alone.
 for name in sorted(os.listdir(outdir)):
 	seq = name.split('-')
+	if len(seq) < 2 or any(len(c) < 4 for c in seq):
+		continue
 	rows = open(os.path.join(outdir, name)).read().split()
-	if len(seq) > 1 and int(seq[0], 16) in BASES and any('y' in r for r in rows):
+	if any('z' in r for r in rows):
+		pairs(rows, *seq)
+	elif sum(int(c, 16) in BASES for c in seq) == 1 and int(seq[0], 16) in BASES and any('y' in r for r in rows):
 		tones(rows, *seq)
 for base in BASES:
 	path = os.path.join(colordir, 'U+%05X' % base)
