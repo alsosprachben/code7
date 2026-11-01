@@ -3,7 +3,9 @@
 # for flags.py and cbdt.py. For each emoji modifier base with a colour glyph in COLORDIR,
 # and each modifier U+1F3FB-1F3FF, the base's drawing is copied with its skin (palette 'y')
 # recoloured to the modifier's tone and saved as BASE-MODIFIER (e.g. 1F44D-1F3FD), so a
-# shaping terminal draws 👍🏽 in that tone. Generated at build time, not stored in fnt/.
+# shaping terminal draws 👍🏽 in that tone. Sequences already in OUTDIR that start with a base and
+# have skin are toned the same way: 1F469-200D-1F4BB (👩‍💻) gives 1F469-1F3FD-200D-1F4BB (👩🏽‍💻).
+# Generated at build time, not stored in fnt/.
 import os, sys
 
 # Emoji_Modifier_Base, Unicode 15.0 (emoji-data.txt)
@@ -19,12 +21,25 @@ TONES = dict(zip(range(0x1F3FB, 0x1F400), 'aeijl'))  # palette letters in cbdt.p
 colordir, outdir = sys.argv[1:3]
 os.makedirs(outdir, exist_ok=True)
 n = 0
+
+
+def tones(rows, *seq):
+	"""Save rows once per tone, as seq with the modifier after its first codepoint."""
+	global n
+	for mod, tone in TONES.items():
+		name = '-'.join([seq[0], '%04X' % mod] + list(seq[1:]))
+		open(os.path.join(outdir, name), 'w').write('\n'.join(r.replace('y', tone) for r in rows) + '\n')
+		n += 1
+
+
+# sequences already in OUTDIR that start with a base (👩‍💻 is 1F469-200D-1F4BB) get toned too (👩🏽‍💻)
+for name in sorted(os.listdir(outdir)):
+	seq = name.split('-')
+	rows = open(os.path.join(outdir, name)).read().split()
+	if len(seq) > 1 and int(seq[0], 16) in BASES and any('y' in r for r in rows):
+		tones(rows, *seq)
 for base in BASES:
 	path = os.path.join(colordir, 'U+%05X' % base)
-	if not os.path.exists(path):
-		continue
-	rows = open(path).read().split()  # a base with no yellow skin (💅, 🧛) is copied unchanged, so it still draws
-	for mod, tone in TONES.items():
-		open(os.path.join(outdir, '%04X-%04X' % (base, mod)), 'w').write('\n'.join(r.replace('y', tone) for r in rows) + '\n')
-		n += 1
+	if os.path.exists(path):  # a base with no yellow skin (💅, 🧛) is copied unchanged, so it still draws
+		tones(open(path).read().split(), '%04X' % base)
 print('skintones.py: %d sequences' % n, file=sys.stderr)
