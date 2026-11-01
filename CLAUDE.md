@@ -53,7 +53,7 @@ Conventions:
 - Any character that is East-Asian-wide (`unicodedata.east_asian_width` W or F) and is in code7 must also have a 12x7 version in `fnt/code7w/12x7`. Python's `unicodedata` lags Unicode (15.0 here) and calls newer emoji narrow, so the emoji lists are the reference: `make check` runs `tools/coverage.py`, which checks every emoji and sequence in `tools/unicode` against the sources. When Unicode publishes a new emoji version, replace the two files there from https://unicode.org/Public/emoji/latest/ and draw whatever it reports. xterm draws a wide character missing from the wide font as blank (bitmap) or a box (TrueType).
 
 Tools (run from anywhere):
-- `tools/dups.py DIR...` reports identical bitmaps, and glyphs with no ink other than the agreed blanks. A later dir overrides an earlier one, so a draft can be checked against a font.
+- `tools/dups.py DIR...` reports identical bitmaps, glyphs with no ink other than the agreed blanks, and characters with two glyph files (`Tau` and `U+03A4`, or `U+27A1` and `U+027A1`), which the build would both put in the font. A later dir overrides an earlier one, so a draft can be checked against a font.
 - `tools/coverage.py` checks the sources against Unicode's emoji lists in `tools/unicode` (emoji, text-style emoji with their 6x7 glyph and colour form, and every sequence's ligature source).
 - `tools/show.py DIR HEX...` prints the given codepoints.
 - `tools/sheet.py DIR` prints a whole glyph dir with character headers.
