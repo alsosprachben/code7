@@ -1,6 +1,6 @@
 .PHONY: all check
 
-all: code7.ttf code7sc.ttf code7it.ttf code7w.ttf
+all: code7.ttf code7sc.ttf code7it.ttf code7w.ttf kitty-code7.conf
 
 # every character must differ from every other by at least one pixel
 check:
@@ -39,6 +39,10 @@ code7w.bdf: ${code7w_glyphs} ${code7_glyphs} latin2x.py
 	d="$$(mktemp -d)" && cp -r ./fnt/code7w/12x7 "$$d/" \
 		&& ./latin2x.py ./fnt/code7/6x7 "$$d/12x7" \
 		&& ./fnt/src/2bdf.sh "$$d/12x7" > "${@}"; s=$$?; rm -rf "$$d"; exit $$s
+
+# kitty routes characters to fonts itself; send every code7w glyph to code7w
+kitty-code7.conf: tools/kitty-conf.py tools/glyphlib.py ${code7w_glyphs}
+	./tools/kitty-conf.py > "${@}"
 
 fontforge: Dockerfile.fontforge
 	DOCKER_BUILDKIT=1 docker build -f Dockerfile.fontforge --build-arg font=${*} --target fontforge -t fontforge .
