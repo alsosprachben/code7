@@ -12,10 +12,9 @@ check:
 	./tools/dups.py ./fnt/code7w/12x7
 	./tools/dups.py ./fnt/code7w-color/12x7
 
-%.ttf: %.bdf fontforge Dockerfile.ttf ttffix.py
-	docker image rm ttf || true
-	DOCKER_BUILDKIT=1 docker build -f Dockerfile.ttf --build-arg font=${*} --target ttf -t ttf .
-	DOCKER_BUILDKIT=1 docker build -f Dockerfile     --build-arg font=${*} --target export --output type=local,dest=. .
+# run ttf.sh in the fontforge image with the repo mounted: nothing is copied, and no image layers are left behind
+%.ttf: %.bdf fontforge ttf.sh ttffix.py
+	docker run --rm --user "$$(id -u):$$(id -g)" -e HOME=/tmp -v "$$PWD:/code7" -w /code7 fontforge ./ttf.sh ${*}
 
 code7_glyphs   := $(wildcard ./fnt/code7/6x7/*)
 code7sc_glyphs := $(wildcard ./fnt/code7sc//6x7/*)
@@ -48,5 +47,5 @@ kitty-code7.conf: tools/kitty-conf.py tools/glyphlib.py ${code7w_glyphs}
 	./tools/kitty-conf.py > "${@}"
 
 fontforge: Dockerfile.fontforge
-	DOCKER_BUILDKIT=1 docker build -f Dockerfile.fontforge --build-arg font=${*} --target fontforge -t fontforge .
+	DOCKER_BUILDKIT=1 docker build -t fontforge - < Dockerfile.fontforge
 	touch fontforge

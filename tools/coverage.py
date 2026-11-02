@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # coverage.py [UNICODEDIR]: check the font sources against Unicode's emoji lists (emoji-sequences.txt
 # and emoji-zwj-sequences.txt, from https://unicode.org/Public/emoji/latest/; a copy is kept in
-# tools/unicode). It builds the ligature sources the way Dockerfile.ttf does (fnt/code7w-flags plus
+# tools/unicode). It builds the ligature sources the way ttf.sh does (fnt/code7w-flags plus
 # genders.py, directions.py, emojiforms.py and skintones.py, in a temporary directory) and reports:
 #   - an emoji with no code7w glyph (fnt/code7w/12x7);
 #   - a text-style emoji (listed with FE0F) missing from any of the 6x7 fonts, or with no colour
