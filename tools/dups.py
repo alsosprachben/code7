@@ -3,10 +3,11 @@
 # (all the same size; a file in a later dir replaces the same name in an earlier one,
 # so drafts can be checked against a font: dups.py fnt/code7/6x7 drafts/code7).
 # Every character must differ from every other by at least one pixel; the agreed
-# exceptions below are not reported (a group of identical glyphs may be any part of one exception). A glyph with no pixels set is reported unless it is one of
+# exceptions below are not reported (a group of identical glyphs may be any part of one exception), and
+# characters with the same compatibility form (NFKC: 𝐀 𝖠 𝙰 and A, Ⅰ and I, ← and its halfwidth form) may share one. A glyph with no pixels set is reported unless it is one of
 # the BLANK characters (an empty 🛜 once slipped through). Two files for one character (Tau and U+03A4,
 # U+27A1 and U+027A1) are reported too: the build would put both in the font. Exits 1 if anything is reported.
-import collections, sys
+import collections, sys, unicodedata
 import glyphlib
 
 EXEMPT = [
@@ -15,7 +16,7 @@ EXEMPT = [
 	{0x332, 0x23bd},        # combining low line, scan line 9
 	{0x336, 0x2500, 0x23AF},  # combining long stroke, box drawings light horizontal, horizontal line extension
 	# bracket and line extension pieces: they sit in column 2 to join the pieces above and below
-	{0x2502, 0x239C, 0x239F, 0x23A2, 0x23A5, 0x23AA, 0x23AE, 0x23D0, 0x1C0},
+	{0x2502, 0x239C, 0x239F, 0x23A2, 0x23A5, 0x23AA, 0x23AE, 0x23D0, 0x1C0, 0xFFE8},
 	# musical symbols that share a bitmap with a symbol they won't be confused with (agreed 2026-11-01)
 	{0x23B8, 0x1D100},  # ⎸ 𝄀
 	{0x2847, 0x1D104},  # ⡇ 𝄄
@@ -55,7 +56,7 @@ EXEMPT = [
 	{0x1F79E, 0x27CA}, {0x2571, 0x27CB, 0x29F8}, {0x2572, 0x27CD, 0x29F9}, {0x2BB9, 0x27CE}, {0x25C8, 0x27D0}, {0x1CC18, 0x27DC}, {0x2727, 0x27E1},  # 🞞 ⟊, ╱ ⟋, ╲ ⟍, ⮹ ⟎, ◈ ⟐, 𜰘 ⟜, ✧ ⟡
 	{0x1CC44, 0x2980}, {0x229A, 0x29BE}, {0x1F795, 0x29BF}, {0x25A3, 0x29C7}, {0x2307, 0x29D9}, {0x23C0, 0x29DE},  # 𜱄 ⦀, ⊚ ⦾, 🞕 ⦿, ▣ ⧇, ⌇ ⧙, ⏀ ⧞
 	{0x21AD, 0x29DF}, {0x2340, 0x29F7}, {0x1F5D5, 0x29FF}, {0xF192, 0x29E0},  # ↭ ⧟, ⍀ ⧷, 🗕 ⧿, a private-use icon and ⧠
-	{0xA9, 0x1F12B}, {0x3B, 0x37E}, {0xB7, 0x387}, {0xB4, 0x384, 0x2CA},  # ; ;, · ·: canonically the same; ΄ is the acute ´
+	{0xA9, 0x1F12B}, {0x3B, 0x37E}, {0xB7, 0x387, 0xFF65}, {0xB4, 0x384, 0x2CA},  # ; ;, · ·: canonically the same; ΄ is the acute ´
 	{0x2127, 0x1B1}, {0x2551, 0x1C1}, {0x2BE3, 0x230},  # ℧ Ʊ (upsilon is the inverted ohm), ║ ǁ (the lateral click is two bars), ⯣ Ȱ
 	# IPA letters drawn as code7's g, or as code7sc's small capitals (code7sc's lowercase is small caps)
 	{0x67, 0x261, 0x262}, {0x6E, 0x274}, {0x79, 0x28F}, {0x62, 0x299}, {0x68, 0x29C}, {0x153, 0x276},
@@ -78,9 +79,14 @@ EXEMPT = [
 	# Latin Extended-F and -G superscripts that the 3x5 superscript set already draws, and a few obscure pairs
 	{0x1D2E, 0x10784}, {0x1D33, 0x10792}, {0x1D34, 0x10796}, {0x1D3E, 0x1DFD1}, {0x1D30, 0x1DFE8}, {0x1D31, 0x1DFEA}, {0xA7F2, 0x107BD},
 	{0x1D1EB, 0x107B8}, {0x3F1, 0x1DF01}, {0x20AD, 0x1DF48},
+	# halfwidth forms are the narrow forms of these symbols; jamo and kana that match an unrelated glyph
+	{0x2190, 0xFFE9}, {0x2191, 0xFFEA}, {0x2192, 0xFFEB}, {0x2193, 0xFFEC}, {0x25A0, 0xFFED}, {0x25CB, 0xFFEE},
+	{0x2BA, 0x303, 0xFF9E}, {0x29F, 0xFFA4}, {0x2610, 0xFFB1}, {0x2394, 0xFFB7}, {0x2562, 0xFFC7}, {0x1D1B4, 0xFFD3}, {0x1D116, 0xFFDA}, {0x2758, 0xFFDC}, {0x23E4, 0xFF70}, {0x1D1AC, 0xFF9F}, {0xA781, 0xFFA1},
+	{0x1FBF0, 0x2A47}, {0x225B, 0x2A6E}, {0x2BCD, 0x2AA4}, {0x2B54, 0x2AA7}, {0x27DB, 0x2AF2}, {0x2337, 0x2AFE},  # 🯰 ⩇, ≛ ⩮, ⯍ ⪤, ⭔ ⪧, ⟛ ⫲, ⌷ ⫾
+	{0x2685, 0x4F}, {0x2718, 0x58}, {0x2716, 0x78}, {0x23FA, 0x3A6}, {0x2B24, 0x3D5}, {0x1DF95, 0x1D6A6},  # bold O X x Φ match ⚅ ✘ ✖ ⏺
 	# one-letter Roman numerals are their letters
 	{0x49, 0x2160}, {0x56, 0x2164}, {0x58, 0x2169}, {0x4C, 0x216C}, {0x43, 0x216D}, {0x44, 0x216E}, {0x4D, 0x216F},
-	{0x69, 0x2170, 0x26A}, {0x76, 0x2174, 0x1D20}, {0x78, 0x2179}, {0x6C, 0x217C, 0x29F}, {0x63, 0x217D, 0x1D04}, {0x64, 0x217E, 0x1D05}, {0x6D, 0x217F, 0x1D0D, 0x43C},
+	{0x69, 0x2170, 0x26A}, {0x76, 0x2174, 0x1D20}, {0x78, 0x2179}, {0x6C, 0x217C, 0x29F, 0xFFA4}, {0x63, 0x217D, 0x1D04}, {0x64, 0x217E, 0x1D05}, {0x6D, 0x217F, 0x1D0D, 0x43C},
 	{0x1D1B8, 0x2043}, {0x23E6, 0x2053}, {0x273E, 0x2055}, {0x250A, 0x205E, 0x2999},  # 𝆸 ⁃, ⏦ ⁓, ✾ ⁕, ┊ ⁞
 ]
 BLANK = {0x20, 0xa0, 0x2800, *range(0x2000, 0x200B), 0x202F, 0x205F}  # the spaces and the braille blank
@@ -94,9 +100,14 @@ for d in sys.argv[1:]:
 by = collections.defaultdict(list)
 for name, bitmap in glyphs.items():
 	by[bitmap].append(name)
+def same(c):
+	"""The compatibility form (NFKC) of a character: characters with the same one may share a bitmap."""
+	return unicodedata.normalize('NFKC', chr(c))
+EXEMPT_NF = [{same(c) for c in ex} for ex in EXEMPT]
 bad = 0
 for group in by.values():
-	if len(group) > 1 and not any({glyphlib.codepoint(n) for n in group} <= ex for ex in EXEMPT):
+	forms = {same(glyphlib.codepoint(n)) for n in group}
+	if len(group) > 1 and len(forms) > 1 and not any(forms <= ex for ex in EXEMPT_NF):
 		print(' = '.join(sorted(group, key=glyphlib.codepoint)))
 		bad += 1
 files = collections.defaultdict(list)
