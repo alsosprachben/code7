@@ -1,6 +1,6 @@
 .PHONY: all check
 
-all: code7.ttf code7sc.ttf code7it.ttf code7w.ttf kitty-code7.conf
+all: code7.ttf code7sc.ttf code7it.ttf code7w.ttf code7t.bdf kitty-code7.conf
 
 # every character must differ from every other by at least one pixel, and every emoji in
 # Unicode's lists (tools/unicode) must have a glyph or ligature source
@@ -11,6 +11,7 @@ check:
 	./tools/dups.py ./fnt/code7it/6x7
 	./tools/dups.py ./fnt/code7w/12x7
 	./tools/dups.py ./fnt/code7w-color/12x7
+	./tools/dups.py ./fnt/code7t/6x9
 
 # run ttf.sh in the fontforge image with the repo mounted: nothing is copied, and no image layers are left behind
 %.ttf: %.bdf fontforge ttf.sh ttffix.py
@@ -30,6 +31,11 @@ code7.bdf: ${code7_glyphs}
 	./fnt/src/2bdf.sh "${<D}" > "${@}"
 
 code7sc.bdf: ${code7sc_glyphs}
+	./fnt/src/2bdf.sh "${<D}" > "${@}"
+
+# Thai and Devanagari in a 6x9 cell (code7's 7 rows and one above and one below, for their marks); BDF only
+code7t_glyphs  := $(wildcard ./fnt/code7t/6x9/*)
+code7t.bdf: ${code7t_glyphs}
 	./fnt/src/2bdf.sh "${<D}" > "${@}"
 
 code7it.bdf: ${code7it_glyphs}

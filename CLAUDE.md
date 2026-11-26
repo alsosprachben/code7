@@ -38,6 +38,10 @@ Skin-tone sequences (👍🏽) are ligatures too, but generated rather than stor
 
 The `fontforge` Make target writes a sentinel file of the same name. The image rebuilds when `Dockerfile.fontforge` changes; delete the sentinel to force a rebuild otherwise. A rebuilt image restamps the build date in every TTF; restore the unchanged ones with `git checkout` before committing. Built BDFs and TTFs are committed.
 
+## code7t: Thai and Devanagari (6x9)
+
+Thai and Devanagari don't fit 7 rows with their marks (Thai stacks a vowel and a tone above a letter and a vowel below it; Devanagari's matras sit above its headline and below its body), so they are a fifth font, `code7t`, in `fnt/code7t/6x9`: code7's 7 rows with one more above and one below (`BASELINE=2`), a BDF only (`make code7t.bdf`), for the Clavitone app, which draws it in code7's line with its marks reaching a row past it each way. Thai: tone marks row 1, vowels above row 2, the letters rows 3-7, vowels below rows 8-9. Devanagari: marks above row 1, the headline row 2 across the whole cell so the letters join, the bodies rows 3-7, marks below rows 8-9. Half forms (a consonant before another, without its stem) are in the Private Use Area at U+E900 + the letter's offset (स् U+E938), the reph and rakaar at U+E980 and U+E981, the ligatures क्ष ज्ञ त्र श्र at U+E9A0..; a shaping program (the app's `nui/shape.h`) puts them in the text. The letters were drafted from Noto (OFL) renderings on the grid (`tools/tall/`) and corrected by hand; the glyph files are the source now. Not yet read by a native reader of either script.
+
 ## Glyph files
 
 Each glyph is a text file of H rows of W cells, `x` for ink and `.` for blank. It is named after its HTML entity in `fnt/src/entities.csv` if it has one (`Aacute`, `boxh`), otherwise `U+XXXXX`.
